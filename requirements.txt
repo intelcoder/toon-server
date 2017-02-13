@@ -1,0 +1,7 @@
+beautifulsoup4==4.5.3
+Django==1.10.5
+django-filter==1.0.1
+djangorestframework==3.5.3
+lxml==3.7.2
+Markdown==2.6.8
+selenium==3.0.2
