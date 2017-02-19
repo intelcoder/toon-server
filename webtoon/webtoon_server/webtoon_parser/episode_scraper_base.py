@@ -8,7 +8,7 @@ class EpisodeScraperBase(WebtoonScraperBase, metaclass=ABCMeta):
 
     # This function will scrap webtoon description and latest no. Webtoon data need to be updated
     @abstractmethod
-    def get_webtoon_detail(self):
+    def get_webtoon_detail(self, soup):
         pass
 
     # get episode details ( title , updated date, rating, thumbnail url )

@@ -35,7 +35,7 @@ class Webtoon(models.Model):
     site = models.ForeignKey(Site)
 
     def __str__(self):
-        return self.webtoon_title
+        return self.title
 
     class Meta:
         ordering = ['title']

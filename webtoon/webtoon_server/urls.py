@@ -19,5 +19,8 @@ urlpatterns = [
     # Daum
     url(r'^daum$', DaumToonListView.as_view()),
     url(r'^daum/init$', DaumInit.as_view()),
+    # url(r'^daum/(?P<toon_id>[0-9]+)/episode$', NaverEpisodeList.as_view()),
+    # url(r'^daum/(?P<toon_id>[0-9]+)/episode/(?P<episode_num>[0-9]+)', NaverEpisodeView.as_view()),
+    # url(r'^daum/(?P<toon_id>[0-9]+)/episode/(?P<episode_num>[0-9]+)/toon', NaverToonView.as_view()),
 
 ]

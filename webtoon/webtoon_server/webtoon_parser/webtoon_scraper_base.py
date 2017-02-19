@@ -9,7 +9,7 @@ driver = webdriver.PhantomJS(executable_path=phantom_path)
 class WebtoonScraperBase():
     def __init__(self, driver=driver, beautifulSoup=BeautifulSoup):
         self.driver = driver
-        self.bs = BeautifulSoup
+        self.bs = beautifulSoup
 
     # get soup from html
     def get_soup(self, url, delay=5):
