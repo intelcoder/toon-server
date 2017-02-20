@@ -12,4 +12,4 @@ class NaverToonView(APIView):
             'image_list': toon_img_list,
             'length': len(toon_img_list)
         }
-        return Response({'data': data})
+        return Response(data)

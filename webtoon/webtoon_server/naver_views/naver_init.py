@@ -27,15 +27,19 @@ def add_webtoon_detail():
 
 class NaverInit(APIView):
     def get(self, request, format=None):
-        # init_webtoon_list()
+        init_webtoon_list()
         add_webtoon_detail()
         return Response("webtoon naver")
 
 
+class NaverInitEpisode(APIView):
+    def get(self, request, format=None):
+        init_webtoon_episode()
+        return Response("naver episode init")
+
 def is_webtoon_exist(toonInfo):
     is_webtoon_exist = Webtoon.objects.filter(toon_id=toonInfo['id']).exists()
     if is_webtoon_exist:
-        print('try', toonInfo)
         return True
     else:
         return False
@@ -71,16 +75,14 @@ def init_webtoon_list():
 
 # get episode lists from page 1 for all webtoons
 def init_webtoon_episode():
-    webtoons = Webtoon.objects.all()
+    webtoons = Webtoon.objects.filter(site__name='naver')
     naver_scraper = NaverEpisodeScraper()
     for webtoon in webtoons:
         toon_id = webtoon.toon_id
 
         soup = naver_scraper.get_page_soup(toon_id)
-        episode_details = naver_scraper.get_lastest_list(soup)
-
-        for episode_detail in episode_details:
-            episode_detail['webtoon'] = webtoon
-            WebtoonEpisodes.objects.create(**episode_detail).save()
+        episode_detail = naver_scraper.get_lastest_episode(soup)
+        episode_detail['webtoon'] = webtoon
+        WebtoonEpisodes.objects.update_or_create(**episode_detail)
 
         print("done", toon_id, webtoon.title)

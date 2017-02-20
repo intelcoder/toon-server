@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from .naver_views.naver_episode import NaverEpisodeView, NaverEpisodeList
-from .naver_views.naver_init import NaverInit
+from .naver_views.naver_init import NaverInit, NaverInitEpisode
 from .naver_views.naver_toon_list import NaverToonList
 from .naver_views.naver_toon_view import NaverToonView
 
@@ -13,8 +13,9 @@ urlpatterns = [
 
     url(r'^naver$', NaverToonList.as_view()),
     url(r'^naver/init$', NaverInit.as_view()),
+    url(r'^naver/init/episode$', NaverInitEpisode.as_view()),
     url(r'^naver/(?P<toon_id>[0-9]+)/episode$', NaverEpisodeList.as_view()),
-    url(r'^naver/(?P<toon_id>[0-9]+)/episode/(?P<episode_num>[0-9]+)', NaverEpisodeView.as_view()),
+    url(r'^naver/(?P<toon_id>[0-9]+)/episode/(?P<episode_num>[0-9]+)$', NaverEpisodeView.as_view()),
     url(r'^naver/(?P<toon_id>[0-9]+)/episode/(?P<episode_num>[0-9]+)/toon', NaverToonView.as_view()),
 
     # Daum
