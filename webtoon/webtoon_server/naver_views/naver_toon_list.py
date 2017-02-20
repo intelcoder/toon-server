@@ -18,7 +18,7 @@ class NaverToonList(ListAPIView):
     ordering_fields = ('title', 'rating')
 
     def get_queryset(self, *args):
-        queryset = Webtoon.objects.all()
+        queryset = Webtoon.objects.filter(site__name="naver")
         query = self.request.query_params.get('weekday')
         if query:
             queryset = queryset.filter(weekday=query)
