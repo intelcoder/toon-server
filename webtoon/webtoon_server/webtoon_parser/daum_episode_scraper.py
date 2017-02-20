@@ -47,15 +47,21 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         :param soup: Beautifulsoup
         :return: 
         """
-        latest_episode_li = soup.find("ul", {"class": "list_update"}).find('li', {"class": ""})
-        uploaded_at = latest_episode_li.div.span.getText().split(' ')[1]
 
-        return {
-            "episode_title": latest_episode_li.a.img['alt'],
-            "uploaded_at": self._format_daum_data(uploaded_at),
-            "no": latest_episode_li.a['data-id'],
-            "thumbnail_url": latest_episode_li.a.img['src']
-        }
+        episode_container = soup.find("ul", {"class": "list_update"})
+        latest_episode_li = episode_container.find('li', {"class": ""}) if episode_container else None
+
+        if latest_episode_li:
+            uploaded_at = latest_episode_li.find('span', {'class': 'txt_date'}).getText().strip().split(' ')[1]
+            print(uploaded_at)
+            return {
+                "episode_title": latest_episode_li.a.img['alt'],
+                "uploaded_at": self._format_daum_data(uploaded_at),
+                "no": latest_episode_li.a['data-id'],
+                "thumbnail_url": latest_episode_li.a.img['src']
+            }
+        return None
+
 
     def get_episode_list(self, soup):
         """
@@ -67,7 +73,7 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         li_list = soup.find("ul", {"class": "list_update"}).findAll('li', {"class": ""})
 
         for li in li_list:
-            uploaded_at = li.div.span.getText().split(' ')[1]
+            uploaded_at = li.div.find('span', {'class': 'txt_date'}).getText().split(' ')[1]
             episode_list.append({
                 "uploaded_at": self._format_daum_data(uploaded_at),
                 "no": li.a['data-id'],
@@ -94,6 +100,7 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         return urljoin(self.base_url, toon_id)
 
     def _format_daum_data(self, date):
+        print('date', date, date.replace('.', '-') )
         if date:
             return date.replace('.', '-')
 
