@@ -9,11 +9,14 @@ weekday_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
 class DaumInit(APIView):
     def get(self, request):
-        # update_or_create_webtoon()
-        # update_toon_detail()
-        get_latest_episode()
+        update_or_create_webtoon()
+        update_toon_detail()
         return Response('daum toon updated or created')
 
+class DaumInitEpisode(APIView):
+    def get(self, request):
+        get_latest_episodes()
+        return Response('daum toon updated or created')
 
 def update_or_create_webtoon():
     if not Site.objects.filter(name='daum').exists():
@@ -72,13 +75,27 @@ def update_or_get_episode_list():
     episode_scraper.close_driver()
 
 
-def get_latest_episode():
-    daum_webtoons = Webtoon.objects.filter(site__name='daum').only("toon_id")
+def get_latest_episodes():
+    """
+    Get All the lastest episode for all daum webtoon
+    :return:
+    """
+    daum_webtoons = Webtoon.objects.filter(site__name='daum', description__isnull=False).only("toon_id")
     episode_scraper = DaumEpisodeScraper()
-    episode_soup = episode_scraper.get_episode_soup('TechUniv', 1)
-    lastest_episode = episode_scraper.get_lastest_episode(episode_soup)
-    new_episode = WebtoonEpisodes(**lastest_episode)
-    new_episode.save()
-    print(lastest_episode)
+
+    for webtoon in daum_webtoons:
+        episode_exist = WebtoonEpisodes.objects.filter(webtoon_id=webtoon.toon_id).exists()
+        if not episode_exist:
+            episode_soup = episode_scraper.get_episode_soup(webtoon.toon_id, 1)
+            lastest_episode = episode_scraper.get_lastest_episode(episode_soup)
+            if lastest_episode and webtoon.description and webtoon.description != "":
+                lastest_episode["webtoon"] = webtoon
+                WebtoonEpisodes.objects.update_or_create(**lastest_episode)
+            # print(lastest_episode)
+        # try:
+        #
+        # except:
+        #     print("error occured")
+        #     episode_scraper.close_driver()
 
 
