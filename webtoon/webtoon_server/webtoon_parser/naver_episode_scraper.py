@@ -42,7 +42,7 @@ class NaverEpisodeScraper(EpisodeScraperBase):
         return {
             'no': no,
             'thumbnail_url': img_src,
-            'title': title,
+            'episode_title': title,
             'rating': rating,
             'uploaded_at': formated_uploaded_at
         }
@@ -51,6 +51,7 @@ class NaverEpisodeScraper(EpisodeScraperBase):
         pass
 
     def get_episode_list(self, soup):
+
         toon_list_container = soup.find('table', {'class': 'viewList'}).findAll('tr', {'class': ''})
         return list(filter(lambda x: x.a, toon_list_container))
 
@@ -63,6 +64,13 @@ class NaverEpisodeScraper(EpisodeScraperBase):
             episode_detail = self._extract_episode_detail(episode)
             episode_details.append(episode_detail)
         return episode_details
+
+
+    def get_lastest_episode(self, soup):
+        episode_list = self.get_episode_list(soup)
+        return self._extract_episode_detail(episode_list[0])
+
+
 
     def get_all_list(self):
         pass
