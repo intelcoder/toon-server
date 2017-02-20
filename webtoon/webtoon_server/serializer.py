@@ -24,6 +24,7 @@ class WebtoonSerializer(serializers.ModelSerializer):
             'title',
             'weekday',
             'rating',
+            'description',
             'author',
             'thumbnail_url',
             'lastest_no',

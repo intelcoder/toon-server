@@ -1,3 +1,5 @@
+import datetime
+
 from .episode_scraper_base import EpisodeScraperBase
 from urllib.parse import urljoin
 
@@ -46,12 +48,13 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         :return: 
         """
         latest_episode_li = soup.find("ul", {"class": "list_update"}).find('li', {"class": ""})
+        uploaded_at = latest_episode_li.div.span.getText().split(' ')[1]
 
         return {
-            "updated_at": latest_episode_li.div.span.getText().split(' ')[1],
+            "episode_title": latest_episode_li.a.img['alt'],
+            "uploaded_at": self._format_daum_data(uploaded_at),
             "no": latest_episode_li.a['data-id'],
-            "thumbnail_url": latest_episode_li.a.img['src'],
-            "episode_title": latest_episode_li.a.img['alt']
+            "thumbnail_url": latest_episode_li.a.img['src']
         }
 
     def get_episode_list(self, soup):
@@ -64,11 +67,12 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         li_list = soup.find("ul", {"class": "list_update"}).findAll('li', {"class": ""})
 
         for li in li_list:
+            uploaded_at = li.div.span.getText().split(' ')[1]
             episode_list.append({
-                "updated_at": li.div.span.getText().split(' ')[1],
+                "uploaded_at": self._format_daum_data(uploaded_at),
                 "no": li.a['data-id'],
                 "thumbnail_url": li.a.img['src'],
-                "episode_title": li.a.img['alt']
+                "episode_title": li.a.img['alt'],
             })
 
         return episode_list
@@ -88,3 +92,9 @@ class DaumEpisodeScraper(EpisodeScraperBase):
 
     def _get_url_queries(self, toon_id, page):
         return urljoin(self.base_url, toon_id)
+
+    def _format_daum_data(self, date):
+        if date:
+            return date.replace('.', '-')
+
+        return datetime.datetime.now()

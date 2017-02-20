@@ -46,7 +46,7 @@ class WebtoonEpisodes(models.Model):
     no = models.IntegerField()
     uploaded_at = models.DateTimeField(default=datetime.datetime.now)
     thumbnail_url = models.URLField(null=True)
-    rating = models.FloatField()
+    rating = models.FloatField(null=True)
     webtoon = models.ForeignKey(Webtoon)
 
     def __str__(self):
