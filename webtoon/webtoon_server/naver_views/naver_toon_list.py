@@ -1,4 +1,6 @@
 from rest_framework.generics import ListAPIView
+from rest_framework import permissions
+from oauth2_provider.ext.rest_framework import TokenHasReadWriteScope, TokenHasScope
 from ..models import Webtoon
 from ..serializer import WebtoonSerializer
 from rest_framework.filters import (
@@ -7,11 +9,13 @@ from rest_framework.filters import (
 )
 
 
+
 class NaverToonList(ListAPIView):
     """
     This view returns webtoon list depends on url query
     """
-
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+    required_scopes = ['read']
     serializer_class = WebtoonSerializer
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ('title',)

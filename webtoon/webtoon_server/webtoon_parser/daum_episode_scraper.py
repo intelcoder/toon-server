@@ -90,7 +90,6 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         return []
 
     def get_episode_soup(self, toon_id, page):
-        print(self._get_url_queries(toon_id, page))
         return self._get_soup(self._get_url_queries(toon_id, page))
 
     def _get_soup(self, request_url):

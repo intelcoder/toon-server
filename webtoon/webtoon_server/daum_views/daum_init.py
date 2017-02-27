@@ -9,6 +9,11 @@ weekday_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
 class DaumInit(APIView):
     def get(self, request):
+        """
+        This api create list of webtoon or update and update webtoon detail after
+        :param request:
+        :return:
+        """
         update_or_create_webtoon()
         update_toon_detail()
         return Response('daum toon updated or created')
