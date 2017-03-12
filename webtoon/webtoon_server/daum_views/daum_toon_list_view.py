@@ -3,6 +3,9 @@ from rest_framework.filters import (
     SearchFilter,
     OrderingFilter
 )
+from rest_framework import permissions
+from oauth2_provider.ext.rest_framework import TokenHasReadWriteScope, TokenHasScope
+
 from ..models import Webtoon
 from ..serializer import WebtoonSerializer
 
@@ -10,6 +13,7 @@ weekday_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
 
 class DaumToonListView(ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
     serializer_class = WebtoonSerializer
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ('title',)
