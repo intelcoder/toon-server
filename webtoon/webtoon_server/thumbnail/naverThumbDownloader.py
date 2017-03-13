@@ -1,18 +1,14 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs, urlencode
-from selenium import webdriver
 from .webtoonParserBase import WebtoonParserBase
-from webtoon_server.config import phantom_path
 
 weekday_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-driver = webdriver.PhantomJS(executable_path=phantom_path)
-
 
 class NaverThumbnailDownloader(WebtoonParserBase):
-    def __init__(self, driver=driver, beautifulSoup=BeautifulSoup, weekday_list=weekday_list):
+    def __init__(self, beautifulSoup=BeautifulSoup, weekday_list=weekday_list):
         self.baseUrl = 'http://comic.naver.com/webtoon/weekdayList.nhn'
         self.weekday_list = weekday_list
-        super().__init__(driver, beautifulSoup)
+        super().__init__(beautifulSoup)
 
     def get_all_thumbnail_and_info(self):
         pass
@@ -53,3 +49,4 @@ class NaverThumbnailDownloader(WebtoonParserBase):
 
     def get_image_list(self, soup):
         return soup.find('ul', {'class': 'img_list'}).findAll('li')
+

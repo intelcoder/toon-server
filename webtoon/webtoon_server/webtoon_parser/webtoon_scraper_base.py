@@ -3,18 +3,16 @@ import time
 from selenium import webdriver
 from webtoon_server.config import phantom_path
 
-driver = webdriver.PhantomJS(executable_path=phantom_path)
-
-
 class WebtoonScraperBase():
-    def __init__(self, driver=driver, beautifulSoup=BeautifulSoup):
-        self.driver = driver
+    def __init__(self, beautifulSoup=BeautifulSoup):
+        self.driver = webdriver.PhantomJS(executable_path=phantom_path)
         self.bs = beautifulSoup
 
     # get soup from html
     def get_soup(self, url, delay=5):
         html = self._get_html_source(url, delay)
         return self.bs(html, 'lxml')
+
 
     def _get_html_source(self, url, delay):
         # sometimes browser need to wait till source code load finish
@@ -32,3 +30,4 @@ class WebtoonScraperBase():
             'src': src,
             'alt': alt
         }
+
