@@ -3,11 +3,14 @@ from rest_framework.response import Response
 from ..thumbnail.naverThumbDownloader import NaverThumbnailDownloader
 from ..models import Webtoon, Site, WebtoonEpisodes
 from ..webtoon_parser.naver_episode_scraper import NaverEpisodeScraper
+from oauth2_provider.ext.rest_framework import TokenHasReadWriteScope, TokenHasScope
+from rest_framework import permissions
 
 
 # This function add description, author, no, which is not in thumbnail page
 def add_webtoon_detail():
-    webtoons = Webtoon.objects.all()
+    webtoons = Webtoon.objects.filter(site__name='naver')
+
     naver_scraper = NaverEpisodeScraper()
     length = len(webtoons)
     count = 0
@@ -26,6 +29,7 @@ def add_webtoon_detail():
 
 
 class NaverInit(APIView):
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
     def get(self, request, format=None):
         init_webtoon_list()
         add_webtoon_detail()
@@ -33,6 +37,7 @@ class NaverInit(APIView):
 
 
 class NaverInitEpisode(APIView):
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
     def get(self, request, format=None):
         init_webtoon_episode()
         return Response("naver episode init")
@@ -46,6 +51,7 @@ def is_webtoon_exist(toonInfo):
 
 
 def init_webtoon_list():
+
     if not Site.objects.filter(name='naver').exists():
         site_naver = Site.objects.create(name='naver');
         site_naver.save()
@@ -59,17 +65,22 @@ def init_webtoon_list():
         # get thumbnail url with webtoon basic info for day of week
         webtoons = naver_downloader.get_thumbnail(dayOfWeek)
         for webtoon in webtoons['webtoons']:
+            print(webtoon)
+            new_webtoon_data = {
+                "toon_id": str(webtoon['id']),
+                "title": webtoon['alt'],
+                "thumbnail_url": webtoon['src'],
+                "weekday": dayOfWeek,
+                "rating": webtoon['rating'],
+                "site": naver,
+            }
             if not is_webtoon_exist(webtoon):
-                newWebtoon = Webtoon.objects.create(
-                    toon_id=str(webtoon['id']),
-                    title=webtoon['alt'],
-                    thumbnail_url=webtoon['src'],
-                    weekday=dayOfWeek,
-                    rating=webtoon['rating'],
-                    site=naver,
-                )
+                new_webtoon = Webtoon.objects.create(**new_webtoon_data)
                 # create new webtoon info
-                newWebtoon.save()
+                new_webtoon.save()
+            else:
+                Webtoon.objects.filter(toon_id=str(webtoon['id'])).update(**new_webtoon_data)
+
     naver_downloader.close_driver()
 
 

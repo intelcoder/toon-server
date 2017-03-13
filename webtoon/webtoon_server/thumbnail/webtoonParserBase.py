@@ -5,8 +5,9 @@ from abc import ABCMeta
 
 
 class WebtoonParserBase(metaclass=ABCMeta):
-    def __init__(self, driver, beautifulSoup):
-        self.driver = driver
+
+    def __init__(self, beautifulSoup):
+        self.driver = webdriver.PhantomJS(executable_path=phantom_path)
         self.bs = BeautifulSoup
 
     # get soup from html
