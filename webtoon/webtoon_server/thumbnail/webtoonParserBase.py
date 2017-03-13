@@ -1,13 +1,12 @@
 from bs4 import BeautifulSoup
 import time
 from abc import ABCMeta
-
-
+from webtoon_server.config import phantom_path
+from selenium import webdriver
 
 class WebtoonParserBase(metaclass=ABCMeta):
-
     def __init__(self, beautifulSoup):
-        self.driver = webdriver.PhantomJS(executable_path=phantom_path)
+        self.driver = webdriver.PhantomJS(executable_path=phantom_path),
         self.bs = BeautifulSoup
 
     # get soup from html
