@@ -11,6 +11,7 @@ class NaverEpisodeScraper(EpisodeScraperBase):
 
     # Get webtoon detail and author to update webtoon
     def get_webtoon_detail(self, soup):
+
         detail_conatiner = soup.find('div', {'class': 'comicinfo'}).find('div', {'class': 'detail'})
         author = detail_conatiner.find('span', {'class': 'wrt_nm'}).getText()
         description = detail_conatiner.p.getText()
