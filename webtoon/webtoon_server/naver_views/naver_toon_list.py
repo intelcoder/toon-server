@@ -21,7 +21,7 @@ class NaverToonList(ListAPIView):
     serializer_class = WebtoonSerializer
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ('title',)
-    ordering_fields = ('title', 'rating')
+    ordering_fields = ('favorite','title', 'rating')
 
     def get_queryset(self, *args):
         queryset = Webtoon.objects.filter(site__name="naver")
