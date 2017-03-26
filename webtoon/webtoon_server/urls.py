@@ -10,8 +10,18 @@ from .daum_views.daum_toon_list_view import DaumToonListView
 from .daum_views.daum_episode_view import DaumEpisodeView
 from .daum_views.daum_init import DaumInit, DaumInitEpisode
 
+from .webtoon_views.webtoon_episode_view import WebtoonEpisodeList
+from .webtoon_views.webtoon_view import WebtoonListView, WebtoonDetail, WebtoonFavorite
+from .webtoon_views.webtoon_toon_image_view import WebtoonToonImageView
+
 
 urlpatterns = [
+    url(r'^$', WebtoonListView.as_view()),
+    url(r'^favorite$', WebtoonFavorite.as_view()),
+    url(r'^(?P<toon_id>[0-9a-zA-Z]+)/$', WebtoonDetail.as_view()),
+    url(r'^^(?P<toon_id>[0-9a-zA-Z]+)/episode/$', WebtoonEpisodeList.as_view()),
+    url(r'^^(?P<toon_id>[0-9a-zA-Z]+)/episode/(?P<episode_num>[0-9]+)/$', WebtoonEpisodeList.as_view()),
+    url(r'^^(?P<toon_id>[0-9a-zA-Z]+)/episode/(?P<episode_num>[0-9]+)/toon/$', WebtoonToonImageView.as_view()),
 
     url(r'^naver$', NaverToonList.as_view()),
     url(r'^naver/(?P<toon_id>[0-9]+)$', NaverListDetail.as_view()),

@@ -1,6 +1,6 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
 from rest_framework import permissions
-from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from oauth2_provider.ext.rest_framework import TokenHasReadWriteScope, TokenHasScope
@@ -12,7 +12,7 @@ from rest_framework.filters import (
 )
 
 
-class NaverToonList(ListAPIView):
+class WebtoonListView(ListAPIView, RetrieveUpdateAPIView):
     """
     This view returns webtoon list depends on url query
     """
@@ -24,15 +24,18 @@ class NaverToonList(ListAPIView):
     ordering_fields = ('favorite','title', 'rating')
 
     def get_queryset(self, *args):
-        queryset = Webtoon.objects.filter(site__name="naver")
+        queryset = Webtoon.objects.all()
         query = self.request.query_params.get('weekday')
+        site = self.request.query_params.get('site')
+        if site:
+            queryset = queryset.filter(site__name=site)
         if query:
             queryset = queryset.filter(weekday=query)
-        return queryset
 
+        return queryset.order_by('favorite', 'title')
 
-class NaverListDetail(RetrieveUpdateAPIView):
-    queryset = Webtoon.objects.filter(site__name='naver')
+class WebtoonDetail(RetrieveUpdateAPIView):
+    queryset = Webtoon.objects.all()
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
     serializer_class = WebtoonSerializer
     lookup_field = 'toon_id'
@@ -40,7 +43,7 @@ class NaverListDetail(RetrieveUpdateAPIView):
 
     def get_object(self):
         queryset = self.get_queryset()
-        target_value = self.kwargs[self.lookup_field]
+        target_value = self.kwargs.get(self.lookup_url_kwarg)
         obj = get_object_or_404(queryset, **{self.lookup_field: target_value})
         return obj
 
@@ -66,3 +69,21 @@ class NaverListDetail(RetrieveUpdateAPIView):
             return Response(True)
 
         return Response(False)
+
+
+class WebtoonFavorite(APIView):
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+
+    def put(self, request):
+        toon_ids = request.data.get("favorite_list")
+        try:
+            webtoons = Webtoon.objects.filter(toon_id__in=toon_ids)
+            for webtoon in webtoons:
+                webtoon.favorite = not webtoon.favorite
+            return Response(True)
+        except:
+            return Response(False)
+
+
+
+

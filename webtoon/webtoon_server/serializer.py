@@ -53,11 +53,10 @@ class WebtoonEpisodeSerializer(WebtoonEpisodeListSerializer):
 
 
 
-class WebtoonEpisodeToon(serializers.ModelSerializer):
+class WebtoonEpisodeToonSerializer(serializers.ModelSerializer):
     class Meta:
         model = WebtoonEpisodeToon
         fields = (
             'image_url',
             'order',
-            'webtoon_episode'
         )

@@ -68,3 +68,4 @@ class WebtoonEpisodeToon(models.Model):
     image_url = models.URLField()
     order = models.IntegerField()
     webtoon_episode = models.ForeignKey(WebtoonEpisodes)
+
