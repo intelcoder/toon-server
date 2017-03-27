@@ -79,7 +79,8 @@ class WebtoonFavorite(APIView):
         try:
             webtoons = Webtoon.objects.filter(toon_id__in=toon_ids)
             for webtoon in webtoons:
-                webtoon.favorite = not webtoon.favorite
+                webtoon.favorite = True
+                webtoon.save()
             return Response(True)
         except:
             return Response(False)
