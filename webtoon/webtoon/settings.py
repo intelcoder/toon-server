@@ -58,7 +58,7 @@ MIDDLEWARE = [
 ]
 
 CRON_CLASSES = [
-    "webtoon_server.cron_job.update.TestCron"
+    "webtoon_server.cron_job.update.EpisodeToonUpdate"
 ]
 
 ROOT_URLCONF = 'webtoon.urls'

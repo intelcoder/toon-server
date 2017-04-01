@@ -7,7 +7,7 @@ from ..webtoon_views.webtoon_toon_image_view import bulk_toon_list
 from ..models import WebtoonEpisodes, WebtoonEpisodeToon
 from django.db import Error
 
-class TestCron(CronJobBase):
+class EpisodeToonUpdate(CronJobBase):
 
     RUN_AT_TIMES = ['10:10', '17:00']
 
