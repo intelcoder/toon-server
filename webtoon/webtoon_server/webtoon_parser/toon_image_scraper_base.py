@@ -6,11 +6,10 @@ class ToonImageScraperBase(WebtoonScraperBase, metaclass=ABCMeta):
 
 
     def __init__(self):
-        self.baseUrl = "http://comic.naver.com/webtoon/detail.nhn"
         super().__init__()
 
     @abstractmethod
-    def scrap_images(self):
+    def scrap_images(self, soup):
         pass
 
     @abstractmethod
@@ -18,5 +17,5 @@ class ToonImageScraperBase(WebtoonScraperBase, metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_toon_image_soup(self, request_url):
+    def get_toon_image_soup(self, id, no):
         pass
