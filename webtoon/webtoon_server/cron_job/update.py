@@ -7,8 +7,8 @@ from ..webtoon_views.webtoon_toon_image_view import bulk_toon_list
 from ..models import WebtoonEpisodes, WebtoonEpisodeToon
 from django.db import Error
 
-class EpisodeToonUpdate(CronJobBase):
 
+class EpisodeToonUpdate(CronJobBase):
     RUN_AT_TIMES = ['10:10', '17:00']
 
     schedule = Schedule(run_at_times=RUN_AT_TIMES)
@@ -30,7 +30,6 @@ class EpisodeToonUpdate(CronJobBase):
                     except Error:
                         # @todo use Logger to save error
                         print(Error)
-
 
 
 def get_episode_scraper(site):
