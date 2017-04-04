@@ -25,7 +25,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.2.55', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.2.56', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'webtoon_server',
+
     'rest_framework',
     'rest_framework.authtoken',
     'oauth2_provider',
+    "django_cron",
+
+    'webtoon_server',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +55,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
+]
+
+CRON_CLASSES = [
+    "webtoon_server.cron_job.update.EpisodeToonUpdate"
 ]
 
 ROOT_URLCONF = 'webtoon.urls'
