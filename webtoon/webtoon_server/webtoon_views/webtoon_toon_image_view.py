@@ -28,7 +28,6 @@ class WebtoonToonImageView(APIView):
         else:
             bulk_toon = []
             site = episode.webtoon.site.name
-            episode = WebtoonEpisodes.objects.filter(webtoon__toon_id=toon_id, no=episode_num).first()
             toon_list = scrape_toon_list(toon_id, episode_num, site)
 
             for index, url in enumerate(toon_list):
@@ -38,6 +37,15 @@ class WebtoonToonImageView(APIView):
             WebtoonEpisodeToon.objects.bulk_create(bulk_toon)
             serialized = WebtoonEpisodeToonSerializer(bulk_toon, many=True)
             return Response(serialized.data)
+
+
+def get_toon_img_list(toon_id, episode, site):
+    bulk_toon = []
+    toon_list = scrape_toon_list(toon_id, episode.no, site)
+    for index, url in enumerate(toon_list):
+        new_toon = create_toon(episode, index, url)
+        bulk_toon.append(new_toon)
+    return bulk_toon
 
 def scrape_toon_list(toon_id, episode_num, site):
     toon_scraper = NaverToonImageScraper() if site == 'naver' else DaumToonImageScraper()
