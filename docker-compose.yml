@@ -3,9 +3,13 @@
    web:
      build: .
      image: fiddlest/django-webtoon
-     command: python ./start.py
+     command: bash -c "cd webtoon;
+                       python manage.py makemigrations;
+                       python manage.py migrate;
+                       python manage.py runserver 0.0.0.0:9966"
      volumes:
        - .:/code
      ports:
        - "9966:9966"
-  
+   db:
+     image: postgres
