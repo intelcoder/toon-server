@@ -25,7 +25,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.2.64', 'localhost', '127.0.0.1', '172.46.2.41']
+ALLOWED_HOSTS = ['192.168.2.105', 'localhost', '127.0.0.1', '172.46.2.41']
 
 
 # Application definition
@@ -66,6 +66,7 @@ ROOT_URLCONF = 'webtoon.urls'
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.IsAdminUser',
@@ -161,4 +162,4 @@ STATIC_URL = '/static/'
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/' # relative url for users
+MEDIA_URL = '/media/'  # relative url for users
