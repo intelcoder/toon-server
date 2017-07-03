@@ -81,7 +81,7 @@ class WebtoonFavorite(APIView):
     def get(self, request, *args, **kwargs):
         weekday = self.request.query_params.get('weekday')
         fav = Webtoon.objects.filter(
-            favorite=True, weekday=weekday).only('toon_id', 'site__name')
+            favorite=True, weekday=weekday)
         result = WebtoonFavSerizlizer(fav, many=True)
         return Response(result.data)
 
