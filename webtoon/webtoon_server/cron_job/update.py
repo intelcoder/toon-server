@@ -18,19 +18,18 @@ class EpisodeToonUpdate(CronJobBase):
         favorites = Webtoon.objects.filter(favorite=True)
         if favorites.exists():
             for webtoon in favorites:
-                if webtoon.site.name == 'naver':
-                    scraper = get_episode_scraper(webtoon.site.name)
-                    soup = scraper.get_page_soup(webtoon.toon_id)
-                    lastest = scraper.get_lastest_episode(soup)
-                    lastest['webtoon'] = webtoon
-                    try:
-                        episode, _ = WebtoonEpisodes.objects.update_or_create(**lastest)
-                        toon_list = get_toon_img_list(webtoon.toon_id, episode, webtoon.site.name)
-                        WebtoonEpisodeToon.objects.bulk_create(toon_list)
-                        print(webtoon)
-                    except Error:
-                        # @todo use Logger to save error
-                        print(Error)
+                scraper = get_episode_scraper(webtoon.site.name)
+                soup = scraper.get_page_soup(webtoon.toon_id)
+                lastest = scraper.get_lastest_episode(soup)
+                lastest['webtoon'] = webtoon
+                try:
+                    episode, _ = WebtoonEpisodes.objects.update_or_create(**lastest)
+                    toon_list = get_toon_img_list(webtoon.toon_id, episode, webtoon.site.name)
+                    WebtoonEpisodeToon.objects.bulk_create(toon_list)
+                    print(webtoon)
+                except Error:
+                    # @todo use Logger to save error
+                    print(Error)
 
 
 def get_episode_scraper(site):
