@@ -9,7 +9,6 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         super().__init__()
         self.base_url = "http://webtoon.daum.net/webtoon/view/"
 
-
     def get_webtoon_detail(self, soup):
         """
         This function will be used to update details of webtoon
@@ -26,7 +25,8 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         toon_detail_container = soup.find('div', {'class': 'product_intro'})
 
         if toon_detail_container:
-            details = toon_detail_container.find('div', {'class': 'desc_product'})
+            details = toon_detail_container.find(
+                'div', {'class': 'desc_product'})
             title = details.find('h3', {'class': 'tit_product'}).getText()
             description = details.find('dd', {'class': 'txt_story'}).getText()
             rating_em = details.find('em', {'class': 'emph_grade'})
@@ -49,10 +49,12 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         """
 
         episode_container = soup.find("ul", {"class": "list_update"})
-        latest_episode_li = episode_container.find('li', {"class": ""}) if episode_container else None
+        latest_episode_li = episode_container.find(
+            'li', {"class": ""}) if episode_container else None
 
         if latest_episode_li:
-            uploaded_at = latest_episode_li.find('span', {'class': 'txt_date'}).getText().strip().split(' ')[1]
+            uploaded_at = latest_episode_li.find(
+                'span', {'class': 'txt_date'}).getText().strip().split(' ')[1]
             print(uploaded_at)
             return {
                 "episode_title": latest_episode_li.a.img['alt'],
@@ -62,7 +64,6 @@ class DaumEpisodeScraper(EpisodeScraperBase):
             }
         return None
 
-
     def get_episode_list(self, soup):
         """
         This function will be used to initialize and update episode list on a webtoon
@@ -70,10 +71,12 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         :return: Dict Episode details in dictionary type
         """
         episode_list = []
-        li_list = soup.find("ul", {"class": "list_update"}).findAll('li', {"class": ""})
+        li_list = soup.find("ul", {"class": "list_update"}).findAll(
+            'li', {"class": ""})
 
         for li in li_list:
-            uploaded_at = li.div.find('span', {'class': 'txt_date'}).getText().split(' ')[1]
+            uploaded_at = li.div.find(
+                'span', {'class': 'txt_date'}).getText().split(' ')[1]
             episode_list.append({
                 "uploaded_at": self._format_daum_data(uploaded_at),
                 "no": li.a['data-id'],
@@ -84,7 +87,8 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         return episode_list
 
     def get_soup_for_episodes(self, soup, latest):
-        episode_li_list = soup.find("ul", {"class": "list_update"}).findAll('li', {"class": ""})
+        episode_li_list = soup.find(
+            "ul", {"class": "list_update"}).findAll('li', {"class": ""})
         if episode_li_list:
             return episode_li_list[:1] if latest else episode_li_list
         return []
@@ -99,7 +103,6 @@ class DaumEpisodeScraper(EpisodeScraperBase):
         return urljoin(self.base_url, toon_id)
 
     def _format_daum_data(self, date):
-        print('date', date, date.replace('.', '-') )
         if date:
             return date.replace('.', '-')
 
